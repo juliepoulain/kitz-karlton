@@ -229,7 +229,7 @@ class Cat:
 
         sql = """
             SELECT * FROM owners
-            WHERE owner_id= ?
+            WHERE id = ?
         """
         CURSOR.execute(
             sql,
