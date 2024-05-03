@@ -3,11 +3,8 @@
 
 from models.owner import Owner
 import ipdb
+from models.cat import Cat
 
-Owner.drop_table()
-Owner.create_table()
-test_owner1 = Owner.create("new", 9785510848, "new")
-test_owner2 = Owner.create("julie", 9785510848, "test2")
-test_owner1.delete()
 
+# test
 ipdb.set_trace()
