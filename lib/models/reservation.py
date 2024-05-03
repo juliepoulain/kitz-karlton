@@ -16,8 +16,5 @@ class Reservation:
             + f"Phone: {self.phone_number}, "
             + f"Length of Stay: {self.length_of_stay}>"
         )
-    
-    @property
-    def phone_number
 
 
