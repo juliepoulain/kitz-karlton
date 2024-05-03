@@ -101,7 +101,7 @@ class Owner:
         """Update the table row corresponding to the current Owner instance."""
         sql = """
             UPDATE owners
-            SET name = ?, phone_numer = ?, address = ?
+            SET name = ?, phone_number = ?, address = ?
             WHERE id = ?
         """
         CURSOR.execute(sql, (self.name, self.phone_number, self.address, self.id))
