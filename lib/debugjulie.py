@@ -8,6 +8,6 @@ Owner.drop_table()
 Owner.create_table()
 test_owner1 = Owner.create("new", 9785510848, "new")
 test_owner2 = Owner.create("julie", 9785510848, "test2")
-test_owner1.delete()
+Owner.get_cats(2)
 
 ipdb.set_trace()
