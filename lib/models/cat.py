@@ -64,7 +64,7 @@ class Cat:
 
     @spice_level.setter
     def spice_level(self, spice_level):
-        if isinstance(spice_level, int) and 1 < spice_level < 6:
+        if isinstance(spice_level, int) and 1 <= spice_level <= 5:
             self._spice_level = spice_level
         else:
             raise ValueError("Spice level must be an integer from one to five")
