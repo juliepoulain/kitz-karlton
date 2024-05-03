@@ -3,6 +3,7 @@ from models.owner import Owner
 
 ACCEPTED_BREEDS = [
     "tabby",
+    "calico",
     "shorthair",
     "siamese",
     "maine coon",
@@ -16,14 +17,13 @@ ACCEPTED_BREEDS = [
 class Cat:
     all = {}
 
-    def __init__(self, name, phone_number, breed, age, spice_level, id=None):
+    def __init__(self, name, breed, age, spice_level, owner_id, id=None):
         self.id = id
         self.name = name
-        self.phone_number = phone_number
         self.breed = breed
         self.age = age
         self.spice_level = spice_level
-        self.__class__.all.append(self)
+        self.owner_id = owner_id
 
     @property
     def name(self):
@@ -35,17 +35,6 @@ class Cat:
             self._name = name
         else:
             raise ValueError("Name must be non-empty string of 30 or fewer characters")
-
-    @property
-    def phone_number(self):
-        return self._phone_number
-
-    @phone_number.setter
-    def phone_number(self, phone_number):
-        if isinstance(phone_number, int) and len(str(phone_number)) == 10:
-            self._phone_number = phone_number
-        else:
-            raise ValueError("Phone number must be 10 digits with no spaces")
 
     @property
     def breed(self):
@@ -76,9 +65,20 @@ class Cat:
     @spice_level.setter
     def spice_level(self, spice_level):
         if isinstance(spice_level, int) and 1 < spice_level < 6:
-            self._spice_level
+            self._spice_level = spice_level
         else:
             raise ValueError("Spice level must be an integer from one to five")
+
+    @property
+    def owner_id(self):
+        return self._owner_id
+
+    @owner_id.setter
+    def owner_id(self, owner_id):
+        if type(owner_id) is int and Owner.find_by_id(owner_id):
+            self._owner_id = owner_id
+        else:
+            raise ValueError(" owner_id must reference an owner in the database")
 
     @classmethod
     def create_table(cls):
@@ -86,12 +86,12 @@ class Cat:
         sql = """
             CREATE TABLE IF NOT EXISTS cats (
             id INTEGER PRIMARY KEY,
-            name TEXT, 
-            phone_number TEXT,  
+            name TEXT,  
             breed TEXT, 
             age INTEGER, 
-            spice_level INTEGER
-            FOREIGN KEY (phone_number) REFERENCES owners(phone_number))
+            spice_level INTEGER,
+            owner_id INTEGER,
+            FOREIGN KEY (owner_id) REFERENCES owners(id))
         """
         CURSOR.execute(sql)
         CONN.commit()
@@ -110,12 +110,12 @@ class Cat:
         Update object id attribute using the primary key value of new row.
         Save the object in local dictionary using table row's PK as dictionary key"""
         sql = """
-                INSERT INTO cats (name, phone_number, breed, age, spice_level)
+                INSERT INTO cats (name, breed, age, spice_level, owner_id)
                 VALUES (?, ?, ?, ?, ?)
         """
 
         CURSOR.execute(
-            sql, (self.name, self.phone_number, self.breed, self.age, self.spice_level)
+            sql, (self.name, self.breed, self.age, self.spice_level, self.owner_id)
         )
         CONN.commit()
 
@@ -126,17 +126,17 @@ class Cat:
         """Update the table row corresponding to the current Cat instance."""
         sql = """
             UPDATE cats
-            SET name = ?, phone_number = ?, breed = ?, age = ?, spice_level = ?
+            SET name = ?, breed = ?, age = ?, spice_level = ?, owner_id = ?
             WHERE id = ?
         """
         CURSOR.execute(
             sql,
             (
                 self.name,
-                self.phone_number,
                 self.breed,
                 self.age,
                 self.spice_level,
+                self.owner_id,
                 self.id,
             ),
         )
@@ -161,9 +161,9 @@ class Cat:
         self.id = None
 
     @classmethod
-    def create(cls, name, phone_number, breed, age, spice_level):
+    def create(cls, name, breed, age, spice_level, owner_id):
         """Initialize a new Cat instance and save the object to the database"""
-        cat = cls(name, phone_number, breed, age, spice_level)
+        cat = cls(name, breed, age, spice_level, owner_id)
         cat.save()
         return cat
 
@@ -176,10 +176,10 @@ class Cat:
         if cat:
             # ensure attributes match row values in case local instance was modified
             cat.name = row[1]
-            cat.phone_number = row[2]
-            cat.breed = row[3]
-            cat.age = row[4]
-            cat.spice_level = row[5]
+            cat.breed = row[2]
+            cat.age = row[3]
+            cat.spice_level = row[4]
+            cat.owner_id = row[5]
         else:
             # not in dictionary, create new instance and add to dictionary
             cat = cls(row[1], row[2], row[3], row[4], row[5])
@@ -212,29 +212,29 @@ class Cat:
         return cls.instance_from_db(row) if row else None
 
     @classmethod
-    def find_by_phone(cls, phone_number):
-        """Return list of cats corresponding to the table rows matching the phone number"""
+    def find_by_owner(cls, owner_id):
+        """Return list of cats corresponding to the table rows matching the owner ID"""
         sql = """
             SELECT *
-            FROM employees
-            WHERE phone_number is ?
+            FROM owners
+            WHERE owner_id is ?
         """
 
-        rows = CURSOR.execute(sql, (phone_number,)).fetchall()
+        rows = CURSOR.execute(sql, (owner_id,)).fetchall()
         return [Cat.instance_from_db(row) for row in rows] if rows else None
 
     def owner(self):
-        """Return list of reviews associated with current employee"""
-        from owner import Owner
+        """Return cat's owner"""
+        from models.owner import Owner
 
         sql = """
             SELECT * FROM owners
-            WHERE phone_number = ?
+            WHERE owner_id= ?
         """
         CURSOR.execute(
             sql,
-            (self.phone_number,),
+            (self.owner_id,),
         )
 
-        row = CURSOR.execute(sql, (id,)).fetchone()
+        row = CURSOR.execute(sql, (self.owner_id,)).fetchone()
         return Owner.instance_from_db(row) if row else None
