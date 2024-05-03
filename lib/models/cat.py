@@ -1,5 +1,5 @@
-from __init__ import CURSOR, CONN
-from owner import Owner
+from models.__init__ import CURSOR, CONN
+from models.owner import Owner
 
 ACCEPTED_BREEDS = [
     "tabby",

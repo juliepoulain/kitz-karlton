@@ -185,3 +185,17 @@ class Owner:
 
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
+    
+    def get_cats(self):
+        """Return cat objects corresponding to current Owner instance"""
+        from models.cat import Cat
+
+        sql = """
+            SELECT * 
+            FROM cats
+            WHERE owner_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id)).fetchall()
+        return [Cat.instance_from_db(row) for row in rows] if rows else None 
+
+
