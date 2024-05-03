@@ -195,7 +195,7 @@ class Owner:
             FROM cats
             WHERE owner_id = ?
         """
-        rows = CURSOR.execute(sql, (self.id)).fetchall()
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
         return [Cat.instance_from_db(row) for row in rows] if rows else None 
 
 
