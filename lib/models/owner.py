@@ -1,4 +1,4 @@
-from __init__ import CURSOR, CONN
+from models.__init__ import CURSOR, CONN
 
 class Owner:
 
@@ -68,7 +68,7 @@ class Owner:
             CREATE TABLE IF NOT EXISTS owners (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            phone_numer INTEGER,
+            phone_number INTEGER,
             address TEXT)
         """
         CURSOR.execute(sql)
