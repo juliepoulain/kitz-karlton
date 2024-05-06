@@ -16,7 +16,7 @@ class Reservation:
             f"<Reservation ID: {self.id}, "
             + f"Phone: {self.phone_number}, "
             + f"Length of Stay: {self.length_of_stay}, "
-            + f"Hotel Room: {self.hotel_room_number}>"
+            + f"Hotel Room: {self.hotel_room_number}\n>"
         )
     
     @property

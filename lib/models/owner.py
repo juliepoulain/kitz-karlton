@@ -14,7 +14,7 @@ class Owner:
         return (
             f"<Owner {self.id}: {self.name}, " +
             f"Phone: {self.phone_number}, " +
-            f"Address: {self.address}>"
+            f"Address: {self.address}\n>"
         )
 
     @property

@@ -25,6 +25,15 @@ class Cat:
         self.spice_level = spice_level
         self.owner_id = owner_id
 
+    def __repr__(self):
+        return (
+            f"<Name: {self.name}, " +
+            f"Breed: {self.breed}, " +
+            f"Age: {self.age}, " +
+            f"Spice Level: {self.spice_level}, " +
+            f"Owner Id: {self.owner_id}\n>"
+        )
+
     @property
     def name(self):
         return self._name
