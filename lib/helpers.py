@@ -57,7 +57,7 @@ def employee_manage_res():
     print("0: Exit Program")
     print("1: Return to Main Menu")
     print("2: Return to Employee Portal")
-    print("3: See all")
+    print("3: See all Reservations")
     print("4: Create Reservation")
     print("5: Update Reservation")
     choice = input("> ")
@@ -104,17 +104,28 @@ def create_reservation():
     print("Please input phone number")
     phone_number = input("> ")
     if (
-            isinstance(phone_number, int) 
-            and len(str(phone_number)) == 10
-        ):
+        isinstance(phone_number, int) 
+        and len(str(phone_number)) == 10
+    ):
         print("Please enter length of stay")
         length_of_stay = input("> ")
-        if length_of_stay:
+        if (
+            isinstance(length_of_stay, int)
+            and 0 < length_of_stay < 15
+        ):
             print("Please enter hotel room number")
             hotel_room_number = input("> ")
-            Reservation.create(phone_number, length_of_stay, hotel_room_number)
+            if (
+            isinstance(hotel_room_number, int)
+            and 0 < hotel_room_number < 11
+            ):
+                Reservation.create(phone_number, length_of_stay, hotel_room_number)
+            else:
+                print("INVALID: Hotel Room Number must be an integer between 1-10")
+                create_hotel_room_number()
         else:
-            length_of_stay()
+            print("INVALID: Length of stay must be an integer between 1-14")
+            create_length_of_stay()
     else:
         print("INVALID: Phone number must be 10 digits with no spaces")
         create_reservation()
@@ -122,19 +133,38 @@ def create_reservation():
 
 def create_length_of_stay():
     print("Please enter length of stay")
-        length_of_stay = input("> ")
-        if length_of_stay:
-            print("Please enter hotel room number")
-            hotel_room_number = input("> ")
+    length_of_stay = input("> ")
+    if (
+        isinstance(length_of_stay, int)
+        and 0 < length_of_stay < 15
+    ):
+        print("Please enter hotel room number")
+        hotel_room_number = input("> ")
+        if (
+            isinstance(hotel_room_number, int)
+            and 0 < hotel_room_number < 11
+            ):
             Reservation.create(phone_number, length_of_stay, hotel_room_number)
         else:
-            print("INVALID: Phone number must be 10 digits with no spaces")
-            create_reservation()
+            print("INVALID: Hotel Room Number must be an integer between 1-10")
+            create_hotel_room_number()
+    else:
+        print("INVALID: Length of stay must be an integer between 1-14")
+        create_length_of_stay()
 
 
+def create_hotel_room_number():
+    print("Please enter hotel room number")
+    hotel_room_number = input("> ")
+    if (
+        isinstance(hotel_room_number, int)
+        and 0 < hotel_room_number < 11
+        ):
+        Reservation.create(phone_number, length_of_stay, hotel_room_number)
 
-
-
+    else:
+        print("INVALID: Hotel Room Number must be an integer between 1-10")
+        create_hotel_room_number()
 
 
 
