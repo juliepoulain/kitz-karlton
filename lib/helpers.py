@@ -409,12 +409,18 @@ def check_hotel_room_number(phone_number, length_of_stay):
 def update_reservation():
     print(Reservation.get_all())
     print("Please enter the ID for the reservation you would like to update")
-    id = input("> ")
-    res_to_update = Reservation.find_by_id(id)
-    print(Reservation.find_by_id(id))
-    specify_reservation_update(res_to_update)
+    entered_id = input("> ")
+    if (
+        entered_id.isnumeric() and Reservation.find_by_id(int(entered_id))
+    ):
+        res_to_update = Reservation.find_by_id(entered_id)
+        specify_reservation_update(res_to_update)
+    else:
+        print("INVALID: Entered ID must exist in database.")
+        update_reservation()
 
 def specify_reservation_update(res_to_update):
+    print(f"Selected Reservation: {res_to_update}")
     print("0: Exit Program")
     print("1: Return to Main Menu")
     print("2: Return to Employee Portal")
@@ -484,6 +490,28 @@ def enter_new_length_of_stay(res_to_update):
         print("INVALID: Length of stay must be an integer between 1-14")
         enter_new_length_of_stay(res_to_update)
 
+def enter_new_hotel_room(res_to_update):
+    print(f"Selected Reservation: {res_to_update}")
+    print("Please enter new hotel room for selected reservation")
+    new_room = input("> ")
+    if (
+        new_room.isnumeric() == True
+        and 0 < int(new_room) < 11
+    ):
+        res_to_update.hotel_room_number = int(new_room)
+        res_to_update.update()
+        print("Hotel Room Number has been updated successfully!")
+        print("Updated Reservation Details:")
+        print(res_to_update)
+        print("Continue to update this reservation? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_reservation_update(res_to_update)
+        else:
+            update_reservation()
+    else: 
+        print("INVALID: Hotel Room must be an integer between 1-10")
+        enter_new_hotel_room(res_to_update)
 
 
 
@@ -555,12 +583,6 @@ def enter_new_length_of_stay(res_to_update):
 
 
 
-
-
-
-
-
-# HOLLIS WORK HERE
 
 
 
