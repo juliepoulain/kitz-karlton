@@ -145,6 +145,12 @@ def employee_manage_cat():
                     employee_portal()
             elif owner_id_choice == "2":
                 create_cat()
+    elif choice == "5":
+        update_cat()
+    else:
+        print("Please enter valid menu option")
+        time.sleep(1)
+        employee_manage_cat()
 
 
 ACCEPTED_BREEDS = [
@@ -210,7 +216,7 @@ def check_cat_spice(name, breed, age):
 def check_cat_owner(name, breed, age, spice_level):
     print("See list of all owner IDs? (Y/N)")
     choice_view_owner_ids = input("> ")
-    if choice_view_owner_ids == "Y":
+    if choice_view_owner_ids.upper() == "Y":
         print(Owner.get_all())
     print("Please enter valid owner ID")
     owner_id = input("> ")
@@ -242,10 +248,166 @@ def check_cat_owner(name, breed, age, spice_level):
         print("INVALID: Owner ID must be an existing owner ID")
         check_cat_owner(name, breed, age, spice_level)
 
+def update_cat():
+    print(Cat.get_all())
+    print("Please enter the ID for the cat you would like to update")
+    entered_id = input("> ")
+    if (
+        entered_id.isnumeric() and Cat.find_by_id(int(entered_id))
+    ):
+        cat_to_update = Cat.find_by_id(entered_id)
+        specify_cat_update(cat_to_update)
+    else:
+        print("INVALID: Entered ID must exist in database.")
+        update_cat()
 
+def specify_cat_update(cat_to_update):
+    print(f"Selected Cat:\n {cat_to_update}")
+    print("0: Exit Program")
+    print("1: Return to Main Menu")
+    print("2: Return to Employee Portal")
+    print("3: Update Name for selected cat")
+    print("4: Update Breed for selected cat")
+    print("5: Update Age for selected cat")
+    print("6: Update Spice Level for selected cat")
+    print("7: Update Owner ID for selected cat")
+    print("8: Delete selected cat")
+    print("9: Choose a different cat to update")
+    choice = input("> ")
+    if choice == "0": 
+        exit_program()
+    elif choice == "1":
+        return_main_menu()
+    elif choice == "2":
+        employee_portal()
+    elif choice == "3":
+        enter_new_cat_name(cat_to_update)
+    elif choice == "4":
+        enter_new_cat_breed(cat_to_update)
+    elif choice == "5":
+        enter_new_cat_age(cat_to_update)
+    elif choice == "6":
+        enter_new_cat_spice_level(cat_to_update)
+    elif choice == "7":
+        enter_new_cat_owner_id(cat_to_update)
+    elif choice == "8":
+        delete_selected_cat(cat_to_update)
+    elif choice == "9":
+        update_cat()
 
+def enter_new_cat_name(cat_to_update):
+    print(f"Selected Cat: {cat_to_update}")
+    print("Please enter new name")
+    new_name = input("> ")
+    if 0 < len(new_name) <= 30:
+        cat_to_update.name = new_name
+        cat_to_update.update()
+        print("Cat Name has been updated successfully!")
+        print("Updated Cat Details:")
+        print(cat_to_update)
+        print("Continue to update this cat? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_cat_update(cat_to_update)
+        else:
+            update_cat()
+    else:
+        print("INVALID: Name must be a non-empty string of 30 or fewer characters")
+        enter_new_cat_name(cat_to_update)
 
+def enter_new_cat_breed(cat_to_update):
+    print(f"Selected Cat: {cat_to_update}")
+    print("Please enter new breed")
+    new_breed = input("> ")
+    if ACCEPTED_BREEDS.count(new_breed.lower()) > 0:
+        cat_to_update.breed = new_breed.lower()
+        cat_to_update.update()
+        print("Cat Breed has been updated successfully!")
+        print("Updated Cat Details:")
+        print(cat_to_update)
+        print("Continue to update this cat? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_cat_update(cat_to_update)
+        else:
+            update_cat()
+    else:
+        print("INVALID: Cat breed must be listed in accepted breeds")
+        print(f"Accepted breeds:\n {ACCEPTED_BREEDS}")
+        enter_new_cat_breed(cat_to_update)
 
+def enter_new_cat_age(cat_to_update):
+    print(f"Selected Cat: {cat_to_update}")
+    print("Please enter new cat age")
+    new_age = input("> ")
+    if new_age.isnumeric() and 0 < int(new_age) <= 30:
+        cat_to_update.age = int(new_age)
+        cat_to_update.update()
+        print("Cat Age has been updated successfully!")
+        print("Updated Cat Details:")
+        print(cat_to_update)
+        print("Continue to update this cat? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_cat_update(cat_to_update)
+        else:
+            update_cat()
+    else:
+        print("INVALID: Age must be positive integer fewer than 31")
+        enter_new_cat_age(cat_to_update)
+
+def enter_new_cat_spice_level(cat_to_update):
+    print(f"Selected Cat: {cat_to_update}")
+    print("Please enter new cat spice level")
+    new_spice_level = input("> ")
+    if new_spice_level.isnumeric() and 1 <= int(new_spice_level) <= 5:
+        cat_to_update.spice_level = int(new_spice_level)
+        cat_to_update.update()
+        print("Cat Spice Level has been updated successfully!")
+        print("Updated Cat Details:")
+        print(cat_to_update)
+        print("Continue to update this cat? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_cat_update(cat_to_update)
+        else:
+            update_cat()
+    else:
+        print("INVALID: Cat spice level must be an integer between 1 and 5, inclusive")
+        enter_new_cat_spice_level(cat_to_update)
+
+def enter_new_cat_owner_id(cat_to_update):
+    print(f"Selected Cat: {cat_to_update}")
+    print("See list of all owner IDs? (Y/N)")
+    choice_view_owner_ids = input("> ")
+    if choice_view_owner_ids.upper() == "Y":
+        print(Owner.get_all())
+    print("Please enter new owner ID")
+    new_owner_id = input("> ")
+    if new_owner_id.isnumeric() and Owner.find_by_id(int(new_owner_id)):
+        cat_to_update.owner_id = int(new_owner_id)
+        cat_to_update.update()
+        print("Cat Owner ID has been updated successfully!")
+        print("Updated Cat Details:")
+        print(cat_to_update)
+        print("Continue to update this cat? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_cat_update(cat_to_update)
+        else:
+            update_cat()
+    else:
+        print("INVALID: Owner ID must be an existing owner ID")
+        enter_new_cat_owner_id(cat_to_update) 
+
+def delete_cat(cat_to_update):
+    print("Are you sure you want to delete selected cat? Enter Y or N")
+    print(f"Selected Cat Details:\n {cat_to_update}")
+    choice = input("> ")
+    if choice.upper() == "Y":
+        cat_to_update.delete()
+    else:
+        specify_cat_update(cat_to_update)
       
 def create_owner():
     ### must return owner object and/or owner ID
