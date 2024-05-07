@@ -74,7 +74,8 @@ def employee_manage_res():
     elif choice == "2":
         employee_portal()
     elif choice == "3":
-        Reservation.get_all()
+        print(Reservation.get_all())
+        employee_manage_res()
     elif choice == "4":
         create_reservation()
     elif choice == "5":
@@ -554,6 +555,100 @@ def delete_selected_cat(cat_to_update):
         
         
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 # julie works here
 def create_reservation():
@@ -591,32 +686,48 @@ def check_hotel_room_number(phone_number, length_of_stay):
         hotel_room_number.isnumeric() == True
         and 0 < int(hotel_room_number) < 11
     ):
-        hotel_room_number = int(hotel_room_number)
         print("Thank you for making a reservation!")
-        print("Reservation Details:")
-        new_reservation = Reservation.create(phone_number, length_of_stay, hotel_room_number)
-        print(Reservation.find_by_phone(phone_number))
-        print("0: Exit Program")
-        print("1: Return to Main Menu")
-        print("2: Return to Employee Portal")
-        print("3: Create another reservation")
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            main_menu()
-        elif choice == "2":
-            employee_portal()
-        elif choice == "3":
-            create_reservation()
-        return new_reservation
+        final_res_create(phone_number, length_of_stay, hotel_room_number)
     else:
         print("INVALID: Hotel Room Number must be an integer between 1-10")
         check_hotel_room_number(phone_number, length_of_stay)
 
+def final_res_create(phone_number, length_of_stay, hotel_room_number):
+    hotel_room_number = int(hotel_room_number)
+    print("Reservation Details:")
+    new_reservation = Reservation.create(phone_number, length_of_stay, hotel_room_number)
+    print(Reservation.find_by_phone(phone_number))
+    print("Returning to menu options...")
+    time.sleep(1)
+    print("Menu Options:")
+    print("0: Exit Program")
+    print("1: Return to Main Menu")
+    print("2: Return to Employee Portal")
+    print("3: Create another reservation")
+    print("4: Update this Reservation")
+    print("5: Delete this Reservation")
+    choice = input("> ")
+    if choice == "0":
+        exit_program()
+    elif choice == "1":
+        main_menu()
+    elif choice == "2":
+        employee_portal()
+    elif choice == "3":
+        create_reservation()
+    elif choice == "4":
+        res_to_update = Reservation.find_by_phone(phone_number)
+        specify_reservation_update(res_to_update)
+    elif choice == "5":
+        res_to_update = Reservation.find_by_phone(phone_number)
+        delete_selected_reservation(res_to_update)
+    else:
+        print("INVALID: entered value must be a number from given menu options")
+        final_res_create(phone_number, length_of_stay, hotel_room_number)
+
 def update_reservation():
     print(Reservation.get_all())
-    print("Please enter the ID for the reservation you would like to update")
+    print("Please enter the ID (listed above) for the reservation you would like to update")
     entered_id = input("> ")
     if (
         entered_id.isnumeric() and Reservation.find_by_id(int(entered_id))
@@ -624,7 +735,7 @@ def update_reservation():
         res_to_update = Reservation.find_by_id(entered_id)
         specify_reservation_update(res_to_update)
     else:
-        print("INVALID: Entered ID must exist in database.")
+        print("INVALID: ID must be an existing Reservation ID")
         update_reservation()
 
 def specify_reservation_update(res_to_update):
@@ -667,7 +778,7 @@ def enter_new_phone(res_to_update):
         print(res_to_update)
         print("Continue to update this reservation? Enter Y or N")
         choice = input("> ")
-        if choice == "Y" or "y":
+        if choice == "Y" or choice == "y":
             specify_reservation_update(res_to_update)
         else:
             update_reservation()
@@ -690,7 +801,7 @@ def enter_new_length_of_stay(res_to_update):
         print(res_to_update)
         print("Continue to update this reservation? Enter Y or N")
         choice = input("> ")
-        if choice == "Y" or "y":
+        if choice == "Y" or choice == "y":
             specify_reservation_update(res_to_update)
         else:
             update_reservation()
@@ -713,10 +824,23 @@ def enter_new_hotel_room(res_to_update):
         print(res_to_update)
         print("Continue to update this reservation? Enter Y or N")
         choice = input("> ")
-        if choice == "Y" or "y":
+        if choice == "Y" or choice == "y":
             specify_reservation_update(res_to_update)
         else:
             update_reservation()
     else: 
         print("INVALID: Hotel Room must be an integer between 1-10")
         enter_new_hotel_room(res_to_update)
+
+def delete_selected_reservation(res_to_update):
+    print(f"Selected Reservation: {res_to_update}")
+    print("Are you sure you want to delete this reservation? Enter Y or N")
+    choice = input("> ")
+    if choice == "Y" or choice == "y":
+        res_to_update.delete()
+        print("Reservation deleted successfully!")
+        print("Returning to manage reservations...")
+        time.sleep(1)
+        employee_manage_res()
+    else:
+        specify_reservation_update(res_to_update)
