@@ -27,11 +27,11 @@ class Cat:
 
     def __repr__(self):
         return (
-            f"<Name: {self.name}, " +
-            f"Breed: {self.breed}, " +
-            f"Age: {self.age}, " +
-            f"Spice Level: {self.spice_level}, " +
-            f"Owner Id: {self.owner_id}\n>"
+            f"<Name: {self.name}, "
+            + f"Breed: {self.breed}, "
+            + f"Age: {self.age}, "
+            + f"Spice Level: {self.spice_level}, "
+            + f"Owner Id: {self.owner_id}\n>"
         )
 
     @property
@@ -51,8 +51,8 @@ class Cat:
 
     @breed.setter
     def breed(self, breed):
-        if ACCEPTED_BREEDS.count(breed) > 0:
-            self._breed = breed
+        if ACCEPTED_BREEDS.count(breed.lower()) > 0:
+            self._breed = breed.lower()
         else:
             raise ValueError("Cat breed must be on the approved list of breeds")
 

@@ -14,4 +14,3 @@ reservation1 = Reservation.create(9785510848, 3, 5)
 owner2 = Owner.create("Hollis", 7202337895, "274a 5th Ave")
 cat2 = Cat.create("Higgs", "tabby", 1, 2, owner2.id)
 reservation2 = Reservation.create(7202337895, 6, 3)
-
