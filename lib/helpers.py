@@ -71,6 +71,8 @@ def employee_manage_res():
         Reservation.get_all()
     elif choice == "4":
         create_reservation()
+    elif choice == "5":
+        update_reservation()
 
 def employee_manage_owner():
     print("Owner data:")
@@ -144,6 +146,41 @@ def check_hotel_room_number(phone_number, length_of_stay):
     else:
         print("INVALID: Hotel Room Number must be an integer between 1-10")
         check_hotel_room_number(phone_number, length_of_stay)
+
+def update_reservation():
+    print(Reservation.get_all())
+    print("Please enter the ID for the reservation you would like to update")
+    id = input("> ")
+    res_to_update = Reservation.find_by_id(id)
+    print(Reservation.find_by_id(id))
+    specify_reservation_update(res_to_update)
+
+def specify_reservation_update(res_to_update):
+    print("0: Exit Program")
+    print("1: Return to Main Menu")
+    print("2: Return to Employee Portal")
+    print("3: Update Phone Number")
+    print("4: Update Length of Stay")
+    print("5: Update Hotel Room Number")
+    print("6: Delete Reservation")
+    choice = input("> ")
+    if choice == "0": 
+        exit_program()
+    elif choice == "1":
+        return_main_menu()
+    elif choice == "2":
+        employee_portal()
+    elif choice == "3":
+        print("Please enter new phone number")
+        res_to_update.phone_number = int(input("> "))
+        res_to_update.update()
+        print("Phone Number updated successfully:")
+        print(res_to_update)
+
+
+
+
+
 
 
 
