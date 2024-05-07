@@ -27,7 +27,8 @@ class Cat:
 
     def __repr__(self):
         return (
-            f"<Name: {self.name}, " +
+            f"<Cat ID: {self.id}, " +
+            f"Name: {self.name}, " +
             f"Breed: {self.breed}, " +
             f"Age: {self.age}, " +
             f"Spice Level: {self.spice_level}, " +
