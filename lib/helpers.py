@@ -3,6 +3,7 @@
 from models.reservation import Reservation
 from models.owner import Owner
 from models.cat import Cat
+import time
 import ipdb
 
 
@@ -225,22 +226,31 @@ def check_cat_owner(name, breed, age, spice_level):
         print("2. Return to Employee Portal")
         print("3. Update cat")
         print("4. Add another cat")
-        if input("> ") == "0":
+        choice = input("> ")
+        if choice == "0":
             exit_program()
-        elif input("> ") == "1":
+        elif choice == "1":
             main_menu()
-        elif input("> ") == "2":
+        elif choice == "2":
             employee_portal()
-        elif input("> ") == "3":
+        elif choice == "3":
             print(f"update {new_cat}")
-        elif input("> ") == "4":
-            employee_manage_cat()
+        elif choice == "4":
+            create_cat()
         return new_cat
     else:
         print("INVALID: Owner ID must be an existing owner ID")
         check_cat_owner(name, breed, age, spice_level)
+
+
+
+
+
       
-      
+def create_owner():
+    ### must return owner object and/or owner ID
+    ### also give option to create cat immediately?
+    pass    
       
       
         
