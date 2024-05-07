@@ -142,6 +142,19 @@ def check_hotel_room_number(phone_number, length_of_stay):
         print("Reservation Details:")
         new_reservation = Reservation.create(phone_number, length_of_stay, hotel_room_number)
         print(Reservation.find_by_phone(phone_number))
+        print("0: Exit Program")
+        print("1: Return to Main Menu")
+        print("2: Return to Employee Portal")
+        print("3: Create another reservation")
+        choice = input("> ")
+        if choice == "0":
+            exit_program()
+        elif choice == "1":
+            main_menu()
+        elif choice == "2":
+            employee_portal()
+        elif choice == "3":
+            create_reservation()
         return new_reservation
     else:
         print("INVALID: Hotel Room Number must be an integer between 1-10")
@@ -159,10 +172,10 @@ def specify_reservation_update(res_to_update):
     print("0: Exit Program")
     print("1: Return to Main Menu")
     print("2: Return to Employee Portal")
-    print("3: Update Phone Number")
-    print("4: Update Length of Stay")
-    print("5: Update Hotel Room Number")
-    print("6: Delete Reservation")
+    print("3: Update Phone Number for selected reservation")
+    print("4: Update Length of Stay for selected reservation")
+    print("5: Update Hotel Room Number for selected reservation")
+    print("6: Delete selected reservation")
     choice = input("> ")
     if choice == "0": 
         exit_program()
@@ -171,12 +184,59 @@ def specify_reservation_update(res_to_update):
     elif choice == "2":
         employee_portal()
     elif choice == "3":
-        print("Please enter new phone number")
-        res_to_update.phone_number = int(input("> "))
-        res_to_update.update()
-        print("Phone Number updated successfully:")
-        print(res_to_update)
+        enter_new_phone(res_to_update)
+    elif choice == "4":
+        enter_new_length_of_stay(res_to_update)
+    elif choice == "5":
+        enter_new_hotel_room(res_to_update)
+    elif choice == "6":
+        delete_selected_reservation(res_to_update)
 
+def enter_new_phone(res_to_update):
+    print(f"Selected Reservation: {res_to_update}")
+    print("Please enter new phone number")
+    new_phone = input("> ")
+    if (
+        new_phone.isnumeric() == True
+        and len(new_phone) == 10
+    ):
+        res_to_update.phone_number = int(new_phone)
+        res_to_update.update()
+        print("Phone Number has been updated successfully!")
+        print("Updated Reservation Details:")
+        print(res_to_update)
+        print("Continue to update this reservation? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_reservation_update(res_to_update)
+        else:
+            update_reservation()
+    else: 
+        print("INVALID: Phone number must be 10 digits with no spaces")
+        enter_new_phone(res_to_update)
+
+def enter_new_length_of_stay(res_to_update):
+    print(f"Selected Reservation: {res_to_update}")
+    print("Please enter new length of stay for selected reservation")
+    new_length = input("> ")
+    if (
+        new_length.isnumeric() == True
+        and 0 < int(new_length) < 15
+    ):
+        res_to_update.length_of_stay = int(new_length)
+        res_to_update.update()
+        print("Length of Stay has been updated successfully!")
+        print("Updated Reservation Details:")
+        print(res_to_update)
+        print("Continue to update this reservation? Enter Y or N")
+        choice = input("> ")
+        if choice == "Y" or "y":
+            specify_reservation_update(res_to_update)
+        else:
+            update_reservation()
+    else: 
+        print("INVALID: Length of stay must be an integer between 1-14")
+        enter_new_length_of_stay(res_to_update)
 
 
 
