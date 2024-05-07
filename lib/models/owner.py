@@ -186,6 +186,18 @@ class Owner:
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
+    @classmethod
+    def find_by_phone(cls, phone_number):
+        """Return owner object corresponding to first table row matching specified phone_number"""
+        sql = """
+            SELECT *
+            FROM owners
+            WHERE phone_number is ?
+        """
+
+        row = CURSOR.execute(sql, (phone_number,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
     def get_cats(self):
         """Return cat objects corresponding to current Owner instance"""
         from models.cat import Cat
